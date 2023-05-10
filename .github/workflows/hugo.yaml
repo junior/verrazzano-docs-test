@@ -56,7 +56,7 @@ jobs:
           echo ">> github.base_ref >>> ${{ github.base_ref }} <<<"
           echo ">> github.head_ref >>> ${{ github.head_ref }} <<<"
           echo ">> github.ref_name >>> ${{ github.ref_name }} <<<"
-          echo ">> github >>> ${{ github }} <<<"
+          echo ">> github >>> ${{ fromJson(github) }} <<<"
       # - name: Build production documentation
       #   env:
       #     # For maximum backward compatibility with Hugo modules
