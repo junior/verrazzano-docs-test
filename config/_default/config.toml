@@ -1,0 +1,60 @@
+# Verrazzano "_default" Site Configuration
+
+title = "Verrazzano Enterprise Container Platform"
+configDir = "config"
+canonifyURLs = "false"
+relativeURLs = "true"
+baseURL = ""
+
+# Hugo allows theme composition (and inheritance). The precedence is from left to right.
+theme = ["github.com/google/docsy"]
+
+# Will give values to .Lastmod etc.
+enableGitInfo = true
+
+# Language settings
+defaultContentLanguage = "en"
+defaultContentLanguageInSubdir = false
+# Useful when translating.
+enableMissingTranslationPlaceholders = true
+
+disableKinds = ["taxonomy", "taxonomyTerm"]
+
+# Configure how URLs look like per section.
+[permalinks]
+blog = "/:section/:year/:month/:day/:slug/"
+
+# Image processing configuration.
+[imaging]
+resampleFilter = "CatmullRom"
+quality = 75
+anchor = "smart"
+
+# Release versions including link to archive
+[[params.versions]]
+version = "v1.5"
+url = "https://verrazzano.io/v1.5/docs"
+
+[[params.versions]]
+version = "v1.4"
+url = "https://verrazzano.io/v1.4/docs"
+
+[[params.versions]]
+version = "v1.3"
+url = "https://verrazzano.io/v1.3/docs"
+
+[[params.versions]]
+version = "v1.2"
+url = "https://verrazzano.io/v1.2/docs"
+
+[[params.versions]]
+version = "v1.1"
+url = "https://verrazzano.io/v1.1/docs"
+
+[[params.versions]]
+version = "Archive"
+url = "https://verrazzano.io/archive/docs"
+
+[security]
+  [security.exec]
+    osEnv = ['(?i)^(PATH|PATHEXT|APPDATA|TMP|TEMP|TERM|HOME|SSH_AUTH_SOCK|USERPROFILE|XDG_CONFIG_HOME|HTTP_PROXY|HTTPS_PROXY|NO_PROXY)$']

@@ -1,0 +1,5 @@
+[[imports]]
+  path = "github.com/google/docsy"
+[[imports]]
+  path = "github.com/google/docsy/dependencies"
+

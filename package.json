@@ -1,0 +1,24 @@
+{
+  "name": "vz-docs",
+  "version": "0.0.1",
+  "description": "Verrazzano documentation and website.",
+  "main": "none.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/verrazzano/docs.git"
+  },
+  "author": "",
+  "license": "UPL",
+  "bugs": {
+    "url": "https://github.com/verrazzano/docs/issues"
+  },
+  "homepage": "https://verrazzano.io",
+  "devDependencies": {
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.3.7",
+    "postcss-cli": "^9.0.2"
+  }
+}
