@@ -52,6 +52,7 @@ jobs:
         run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
       - name: Info
         run: |
+          echo ">> 1 <<<"
           echo ">> github.ref >>> ${{ github.ref }} <<<"
           echo ">> github.base_ref >>> ${{ github.base_ref }} <<<"
           echo ">> github.head_ref >>> ${{ github.head_ref }} <<<"
