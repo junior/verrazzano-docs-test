@@ -52,11 +52,12 @@ jobs:
         run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
       - name: Info
         run: |
-          echo ">> 1 <<<"
+          echo ">> 2 <<<"
           echo ">> github.ref >>> ${{ github.ref }} <<<"
           echo ">> github.base_ref >>> ${{ github.base_ref }} <<<"
           echo ">> github.head_ref >>> ${{ github.head_ref }} <<<"
           echo ">> github.ref_name >>> ${{ github.ref_name }} <<<"
+          echo ">> github.event.pull_request.base.ref >>> ${{ github.event.pull_request.base.ref }} <<<"
       - name: CURRENT_BRANCH
         run: echo "$(git rev-parse --abbrev-ref HEAD)"
       # - name: Build production documentation
