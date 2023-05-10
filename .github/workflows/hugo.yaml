@@ -6,6 +6,8 @@ on:
   push:
     branches:
       - main
+      - archive
+      - release-*
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -45,9 +47,9 @@ jobs:
         with:
           submodules: recursive
           fetch-depth: 0
-      # - name: Setup Pages
-      #   id: pages
-      #   uses: actions/configure-pages@v3
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v3
       - name: Install Node.js dependencies
         run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
       - name: Info
@@ -58,32 +60,32 @@ jobs:
           echo ">> github.head_ref >>> ${{ github.head_ref }} <<<"
           echo ">> github.ref_name >>> ${{ github.ref_name }} <<<"
           echo ">> github.event.pull_request.base.ref >>> ${{ github.event.pull_request.base.ref }} <<<"
-      - name: CURRENT_BRANCH
-        run: echo "$(git rev-parse --abbrev-ref HEAD)"
-      # - name: Build production documentation
-      #   env:
-      #     # For maximum backward compatibility with Hugo modules
-      #     # --baseURL "${{ steps.pages.outputs.base_url }}/"
-      #     HUGO_ENVIRONMENT: production
-      #     HUGO_ENV: production
-      #   run: |
-      #     hugo \
-      #       --gc \
-      #       --environment production \
-      #       --destination production
-      # - name: Upload production artifact
-      #   uses: actions/upload-pages-artifact@v1
-      #   with:
-      #     path: ./production
+      - name: Build production documentation
+        env:
+          # For maximum backward compatibility with Hugo modules
+          # --baseURL "${{ steps.pages.outputs.base_url }}/"
+          HUGO_ENVIRONMENT: production
+          HUGO_ENV: production
+        run: |
+          hugo \
+            --gc \
+            --environment production \
+            --destination latest
+      - name: Create Devel
+        run: cp -r latest devel
+      - name: Upload production artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: ./
 
   # Deployment job
-  # deploy:
-  #   environment:
-  #     name: github-pages
-  #     url: ${{ steps.deployment.outputs.page_url }}
-  #   runs-on: ubuntu-latest
-  #   needs: build
-  #   steps:
-  #     - name: Deploy to GitHub Pages
-  #       id: deployment
-  #       uses: actions/deploy-pages@v2
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
