@@ -59,7 +59,8 @@ jobs:
           echo ">> github.base_ref >>> ${{ github.base_ref }} <<<"
           echo ">> github.head_ref >>> ${{ github.head_ref }} <<<"
           echo ">> github.ref_name >>> ${{ github.ref_name }} <<<"
-          echo ">> github.event.pull_request.base.ref >>> ${{ github.event.pull_request.base.ref }} <<<"
+          ls -lah
+          pwd
       - name: Build production documentation
         env:
           # For maximum backward compatibility with Hugo modules
@@ -71,8 +72,12 @@ jobs:
             --gc \
             --environment production \
             --destination latest
-      - name: Create Devel
-        run: cp -r latest devel
+      - name: Create archive
+        run: cp -r latest archive
+      - name: build-redirects
+        run: ./build-redirects.sh
+      - name: build-redirects
+        run: ls -lah
       - name: Upload production artifact
         uses: actions/upload-pages-artifact@v1
         with:
