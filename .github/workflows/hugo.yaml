@@ -71,25 +71,20 @@ jobs:
           hugo \
             --gc \
             --environment production \
-            --destination latest
-      - name: Create archive
-        run: cp -r latest archive
+            --destination public/latest
       - name: build-redirects
         run: ./build-redirects.sh
-      - name: build-redirects
+      - name: Create folders
+        run: |
+          cp -r public/latest public/archive
+          cp -r docs public/docs
+          cp index.html public/index.html
+      - name: List
         run: ls -lah
       - name: Upload production artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: ./latest
-      - name: Upload production artifact
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: ./archive
-      - name: Upload production artifact
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: ./docs
+          path: ./public
 
   # Deployment job
   deploy:
