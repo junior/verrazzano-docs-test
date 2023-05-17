@@ -61,8 +61,6 @@ jobs:
           echo ">> github.ref_name >>> ${{ github.ref_name }} <<<"
           echo ">> steps.pages.outputs.base_url >>> ${{ steps.pages.outputs.base_url }} <<<"
           echo ">> steps.pages.outputs.base_path >>> ${{ steps.pages.outputs.base_path }} <<<"
-          ls -lah
-          pwd
       - name: Build production documentation
         env:
           # For maximum backward compatibility with Hugo modules
@@ -73,8 +71,54 @@ jobs:
             --gc \
             --environment production \
             --destination public/latest
-      - name: build-redirects
-        run: ./build-redirects.sh
+      - name: Build Redirects
+        run: |
+          LATEST="latest"
+          INDEX_FILE="_index"
+
+          function fprint_index() {
+            local url="$1"
+            local file="$2"
+            echo "<!DOCTYPE html>
+          <html>
+            <head>
+              <title>$url</title>
+              <link rel='canonical' href='$url'/>
+              <meta name='robots' content='noindex'>
+              <meta http-equiv='content-type' content='text/html; charset=utf-8'/>
+              <meta http-equiv='refresh' content='0; url=$url'/>
+            </head>
+          </html>" > "$2"
+          }
+
+          function redirect_file() {
+            local newPath="$1"
+            local url="${{ steps.pages.outputs.base_path }}/$LATEST/$newPath"
+
+            echo "creating redirect for $newPath"
+
+            mkdir -p "../../$newPath"
+
+            fprint_index "$url" "../../$newPath/index.html"
+          }
+
+          fprint_index "${{ steps.pages.outputs.base_path }}/$LATEST" "index.html"
+
+          rm -rf docs
+          cd content/en
+
+          mdFiles=$(find docs -name "*.md")
+          for file in $mdFiles; do
+            name=$(basename "$file" .md)
+            path=$(dirname "$file" | awk '{print tolower($0)}')
+
+            if [[ "$name" == "$INDEX_FILE" ]]; then
+              redirect_file "$path"
+            else
+              name="$(echo "$name"| awk '{print tolower($0)}')"
+              redirect_file "$path/$name"
+            fi
+          done
       - name: Create folders
         run: |
           cp -r public/latest public/archive
