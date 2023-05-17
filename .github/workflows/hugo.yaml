@@ -59,12 +59,13 @@ jobs:
           echo ">> github.base_ref >>> ${{ github.base_ref }} <<<"
           echo ">> github.head_ref >>> ${{ github.head_ref }} <<<"
           echo ">> github.ref_name >>> ${{ github.ref_name }} <<<"
+          echo ">> steps.pages.outputs.base_url >>> ${{ steps.pages.outputs.base_url }} <<<"
+          echo ">> steps.pages.outputs.base_path >>> ${{ steps.pages.outputs.base_path }} <<<"
           ls -lah
           pwd
       - name: Build production documentation
         env:
           # For maximum backward compatibility with Hugo modules
-          # --baseURL "${{ steps.pages.outputs.base_url }}/"
           HUGO_ENVIRONMENT: production
           HUGO_ENV: production
         run: |
