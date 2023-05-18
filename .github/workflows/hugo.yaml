@@ -1,5 +1,5 @@
 # Copyright (c) 2023 Oracle and/or its affiliates.
-name: Deploy Verrazzano Docs (using Hugo) to Pages
+name: Deploy Verrazzano Docs to Pages
 
 on:
   # Runs on pushes targeting master and release-*
@@ -70,70 +70,6 @@ jobs:
             --gc \
             --environment production \
             --destination public/latest
-      # - name: Build Redirects
-      #   run: |
-      #     LATEST="latest"
-      #     INDEX_FILE="_index"
-
-      #     function fprint_index() {
-      #       local url="$1"
-      #       local file="$2"
-      #       echo "<!DOCTYPE html>
-      #     <html>
-      #       <head>
-      #         <title>$url</title>
-      #         <link rel='canonical' href='$url'/>
-      #         <meta name='robots' content='noindex'>
-      #         <meta http-equiv='content-type' content='text/html; charset=utf-8'/>
-      #         <meta http-equiv='refresh' content='0; url=$url'/>
-      #       </head>
-      #     </html>" > "$2"
-      #     }
-
-      #     function redirect_file() {
-      #       local newPath="$1"
-      #       local url="${{ steps.pages.outputs.base_path }}/$LATEST/$newPath"
-
-      #       echo "creating redirect for $newPath"
-
-      #       mkdir -p "../../$newPath"
-
-      #       fprint_index "$url" "../../$newPath/index.html"
-      #     }
-
-      #     fprint_index "${{ steps.pages.outputs.base_path }}/$LATEST" "index.html"
-
-      #     rm -rf docs
-      #     cd content/en
-
-      #     mdFiles=$(find docs -name "*.md")
-      #     for file in $mdFiles; do
-      #       name=$(basename "$file" .md)
-      #       path=$(dirname "$file" | awk '{print tolower($0)}')
-
-      #       if [[ "$name" == "$INDEX_FILE" ]]; then
-      #         redirect_file "$path"
-      #       else
-      #         name="$(echo "$name"| awk '{print tolower($0)}')"
-      #         redirect_file "$path/$name"
-      #       fi
-      #     done
-      # - name: Create folders (temp-test)
-      #   run: |
-      #     cp -r public/latest public/archive
-      #     cp -r public/latest public/devel
-      #     cp -r public/latest public/v1.5
-      #     cp -r docs public/docs
-      #     cp index.html public/index.html
-      # - name: Upload production artifact
-      #   uses: actions/upload-pages-artifact@v1
-      #   with:
-      #     path: ./public
-
-  Create_Redirects:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
       - name: Build Redirects
         run: |
           LATEST="latest"
@@ -182,14 +118,8 @@ jobs:
               redirect_file "$path/$name"
             fi
           done
-
-  Prepare_Artifacts:
-    runs-on: ubuntu-latest
-    needs: Create_Redirects
-    steps:
       - name: Create folders (temp-test)
         run: |
-          cp -r public/latest public/archive
           cp -r public/latest public/devel
           cp -r public/latest public/v1.5
           cp -r docs public/docs
@@ -205,7 +135,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: Prepare_Artifacts
+    needs: build
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
